@@ -266,17 +266,26 @@ func (w *wrapConn) Read(p []byte) (n int, err error) {
 		return
 	}
 	decoded, _ := base64.StdEncoding.DecodeString(string(data[1:]))
-	if err != nil {
+	if err != nil || len(decoded) == 0 {
 		return
 	}
 
 	w.buf = append(w.buf, decoded...)
-	if w.buf[len(w.buf)-1] == '\n' {
+	cmds := strings.Split(string(w.buf), "\n")
+	w.buf = nil
+	length := len(cmds)
+	if decoded[len(decoded)-1] != '\n' {
+		w.buf = append(w.buf, cmds[length-1]...)
+		length--
+	}
+	for i := 0; i < length; i++ {
+		if len(cmds[i]) == 0 {
+			continue
+		}
 		w.cmds = append(w.cmds, &cmdWithTimestamp{
 			start: time.Now(),
-			cmd:   string(w.buf),
+			cmd:   cmds[i],
 		})
-		w.buf = nil
 	}
 	return
 }

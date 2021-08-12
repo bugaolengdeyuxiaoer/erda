@@ -74,9 +74,9 @@ func (a *Authenticator) AuthMiddleware(next http.Handler) http.Handler {
 			}
 		}
 		if !found {
-			resp.WriteHeader(http.StatusForbidden)
-			resp.Write(apistructs.NewSteveError(apistructs.PermissionDenied,
-				fmt.Sprintf("current user does not have permission for cluster %s", clusterName)).JSON())
+			resp.WriteHeader(http.StatusNotFound)
+			resp.Write(apistructs.NewSteveError(apistructs.NotFound,
+				fmt.Sprintf("cluster %s not found in target org", clusterName)).JSON())
 			return
 		}
 
