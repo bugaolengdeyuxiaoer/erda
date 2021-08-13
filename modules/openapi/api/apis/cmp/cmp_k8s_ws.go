@@ -14,20 +14,20 @@
 package cmp
 
 import (
-	"github.com/erda-project/erda/apistructs"
+	"net/http"
+
 	"github.com/erda-project/erda/modules/openapi/api/apis"
 )
 
-var CMP_STEVE_GET = apis.ApiSpec{
-	Path:         "/api/k8s/clusters/<clusterName>/v1/<*>",
-	BackendPath:  "/api/k8s/clusters/<clusterName>/v1/<*>",
-	Method:       "GET",
+var APIDocWebsocket = apis.ApiSpec{
+	Path:         "/api/k8s/clusters/<*>",
+	BackendPath:  "/api/k8s/clusters/<*>",
 	Host:         "cmp.marathon.l4lb.thisdcos.directory:9027",
-	K8SHost:      "cmp:9027",
-	Scheme:       "http",
-	Audit:        nil,
+	Scheme:       "ws",
+	Method:       http.MethodGet,
 	CheckLogin:   true,
-	Doc:          "get a k8s resource",
-	ResponseType: apistructs.SteveResource{},
-	IsOpenAPI:    true,
+	CheckToken:   true,
+	RequestType:  nil,
+	ResponseType: nil,
+	Doc:          "k8s shell and logs",
 }

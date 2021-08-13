@@ -19,15 +19,15 @@ import (
 )
 
 var CMP_STEVE_LIST = apis.ApiSpec{
-	Path:         "/api/k8s/clusters/<*>",
-	BackendPath:  "/api/k8s/clusters/<*>",
+	Path:         "/api/k8s/clusters/<clusterName>/v1/<*>",
+	BackendPath:  "/api/k8s/clusters/<clusterName>/v1/<*>",
 	Method:       "GET",
 	Host:         "cmp.marathon.l4lb.thisdcos.directory:9027",
 	K8SHost:      "cmp:9027",
 	Scheme:       "http",
 	Audit:        nil,
 	CheckLogin:   true,
-	Doc:          "获取某种类型k8s资源集合",
+	Doc:          "list a type of k8s resource",
 	ResponseType: apistructs.SteveCollection{},
 	IsOpenAPI:    true,
 }

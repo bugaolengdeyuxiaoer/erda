@@ -19,15 +19,15 @@ import (
 )
 
 var CMP_STEVE_UPDATE = apis.ApiSpec{
-	Path:         "/api/k8s/clusters/<*>",
-	BackendPath:  "/api/k8s/clusters/<*>",
+	Path:         "/api/k8s/clusters/<clusterName>/v1/<*>",
+	BackendPath:  "/api/k8s/clusters/<clusterName>/v1/<*>",
 	Method:       "PUT",
 	Host:         "cmp.marathon.l4lb.thisdcos.directory:9027",
 	K8SHost:      "cmp:9027",
 	Scheme:       "http",
 	Audit:        nil,
 	CheckLogin:   true,
-	Doc:          "对某个k8s资源进行更新",
+	Doc:          "update a k8s resource",
 	RequestType:  apistructs.K8SResource{},
 	ResponseType: apistructs.SteveResource{},
 	IsOpenAPI:    true,
