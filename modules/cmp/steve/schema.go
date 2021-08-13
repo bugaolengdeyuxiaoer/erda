@@ -19,6 +19,7 @@ import (
 	"github.com/rancher/apiserver/pkg/store/apiroot"
 	"github.com/rancher/apiserver/pkg/subscribe"
 	"github.com/rancher/apiserver/pkg/types"
+	"github.com/rancher/steve/pkg/accesscontrol"
 	"github.com/rancher/steve/pkg/attributes"
 	"github.com/rancher/steve/pkg/client"
 	"github.com/rancher/steve/pkg/resources/apigroups"
@@ -40,9 +41,9 @@ func DefaultSchemas(baseSchema *types.APISchemas) {
 }
 
 func DefaultSchemaTemplates(cf *client.Factory,
-	discovery discovery.DiscoveryInterface) []schema.Template {
+	discovery discovery.DiscoveryInterface, asl accesscontrol.AccessSetLookup) []schema.Template {
 	return []schema.Template{
-		DefaultTemplate(cf),
+		DefaultTemplate(cf, asl),
 		apigroups.Template(discovery),
 		{
 			ID:        "configmap",
@@ -59,9 +60,9 @@ func DefaultSchemaTemplates(cf *client.Factory,
 	}
 }
 
-func DefaultTemplate(clientGetter proxy.ClientGetter) schema.Template {
+func DefaultTemplate(clientGetter proxy.ClientGetter, asl accesscontrol.AccessSetLookup) schema.Template {
 	return schema.Template{
-		Store:     cmpproxy.NewProxyStore(clientGetter),
+		Store:     cmpproxy.NewProxyStore(clientGetter, asl),
 		Formatter: formatter(),
 	}
 }

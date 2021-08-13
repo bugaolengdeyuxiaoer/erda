@@ -158,7 +158,7 @@ func setup(ctx context.Context, server *Server) error {
 
 	DefaultSchemas(server.BaseSchemas)
 
-	for _, template := range DefaultSchemaTemplates(cf, server.controllers.K8s.Discovery()) {
+	for _, template := range DefaultSchemaTemplates(cf, server.controllers.K8s.Discovery(), asl) {
 		sf.AddTemplate(template)
 	}
 
