@@ -19,8 +19,8 @@ import (
 )
 
 var CMP_STEVE_LIST = apis.ApiSpec{
-	Path:         "/api/k8s/clusters/<clusterName>/v1/<*>",
-	BackendPath:  "/api/k8s/clusters/<clusterName>/v1/<*>",
+	Path:         "/api/k8s/clusters/<*>",
+	BackendPath:  "/api/k8s/clusters/<*>",
 	Method:       "GET",
 	Host:         "cmp.marathon.l4lb.thisdcos.directory:9027",
 	K8SHost:      "cmp:9027",
