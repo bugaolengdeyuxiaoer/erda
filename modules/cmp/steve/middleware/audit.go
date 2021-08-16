@@ -87,7 +87,7 @@ func (a *Auditor) AuditMiddleWare(next http.Handler) http.Handler {
 		if body == nil {
 			return
 		}
-		if writer.statusCode/100 != 2 {
+		if writer.statusCode < 200 || writer.statusCode >= 300 {
 			return
 		}
 
