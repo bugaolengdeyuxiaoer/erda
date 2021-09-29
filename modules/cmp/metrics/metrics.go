@@ -320,7 +320,6 @@ func (m *Metric) ToInfluxReq(req *MetricsRequest, kind string) (*MetricsReq, map
 	case Node:
 		return m.toInfluxReq(req.NodeRequests, clusterName, req.ResourceType(), req.ResourceKind(), NodeResourceUsageSelectStatement)
 	case Pod:
-
 		return m.toInfluxReq(req.PodRequests, clusterName, req.ResourceType(), req.ResourceKind(), PodResourceUsageSelectStatement)
 	default:
 		logrus.Errorf("query metrics kind %v, %v", kind, ResourceNotSupport)
