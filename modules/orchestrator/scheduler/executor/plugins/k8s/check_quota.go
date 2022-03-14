@@ -17,9 +17,7 @@ package k8s
 import (
 	"context"
 	"fmt"
-	"strconv"
 	"strings"
-	"time"
 
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -121,22 +119,22 @@ func (k *Kubernetes) CheckQuota(ctx context.Context, projectID, workspace, runti
 	}
 
 	if requestsCPU > leftCPU || requestsMem > leftMem {
-		humanLog, primevalLog := getLogContent(locale, requestsCPU, requestsMem, leftCPU, leftMem, kind, serviceName)
+		_, primevalLog := getLogContent(locale, requestsCPU, requestsMem, leftCPU, leftMem, kind, serviceName)
 		if runtimeID != "" {
-			if err = k.bdl.CreateErrorLog(&apistructs.ErrorLogCreateRequest{
-				ErrorLog: apistructs.ErrorLog{
-					ResourceType:   apistructs.RuntimeError,
-					ResourceID:     runtimeID,
-					OccurrenceTime: strconv.FormatInt(time.Now().Unix(), 10),
-					HumanLog:       humanLog,
-					PrimevalLog:    primevalLog,
-					DedupID:        fmt.Sprintf("%s-scheduler-error", runtimeID),
-				},
-			}); err != nil {
-				logrus.Errorf("failed to create quota error log when check quota, %v", err)
-			} else {
-				logrus.Infof("Create/Update quota error log for runtime %s succeeded", runtimeID)
-			}
+			//if err = k.bdl.CreateErrorLog(&apistructs.ErrorLogCreateRequest{
+			//	ErrorLog: apistructs.ErrorLog{
+			//		ResourceType:   apistructs.RuntimeError,
+			//		ResourceID:     runtimeID,
+			//		OccurrenceTime: strconv.FormatInt(time.Now().Unix(), 10),
+			//		HumanLog:       humanLog,
+			//		PrimevalLog:    primevalLog,
+			//		DedupID:        fmt.Sprintf("%s-scheduler-error", runtimeID),
+			//	},
+			//}); err != nil {
+			//	logrus.Errorf("failed to create quota error log when check quota, %v", err)
+			//} else {
+			//	logrus.Infof("Create/Update quota error log for runtime %s succeeded", runtimeID)
+			//}
 		}
 		return false, primevalLog, nil
 	}

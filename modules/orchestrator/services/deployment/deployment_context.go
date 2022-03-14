@@ -851,6 +851,23 @@ func (fsm *DeployFSMContext) requestAddons() error {
 	return nil
 }
 
+func (fsm *DeployFSMContext) ExportLogInfo(level apistructs.ErrorLogLevel, tp apistructs.ErrorResourceType, id, dedupid string, format string, params ...interface{}) {
+	s := fmt.Sprintf(format, params...)
+	if err := fsm.bdl.CreateErrorLog(&apistructs.ErrorLogCreateRequest{
+		ErrorLog: apistructs.ErrorLog{
+			ResourceType:   tp,
+			Level:          level,
+			ResourceID:     id,
+			OccurrenceTime: strconv.FormatInt(time.Now().Unix(), 10),
+			HumanLog:       s,
+			PrimevalLog:    s,
+			DedupID:        fmt.Sprintf("orch-%s", dedupid),
+		},
+	}); err != nil {
+		logrus.Errorf("[ExportLogInfo]: %v", err)
+	}
+}
+
 func (fsm *DeployFSMContext) deployService() error {
 	// make sure runtime must have scheduleName
 	if fsm.Runtime.ScheduleName.Name == "" {
@@ -941,6 +958,8 @@ func (fsm *DeployFSMContext) deployService() error {
 		}
 	} else {
 		if err := fsm.bdl.CreateServiceGroup(group); err != nil {
+			fsm.ExportLogInfo(apistructs.ErrorLevel, apistructs.RuntimeError, group.ID, fmt.Sprintf("%d", fsm.Runtime.ID)+"-callprovider", i18n.OrgSprintf(strconv.FormatUint(fsm.Runtime.OrgID, 10), "NotEnoughQuotaToDeploy"),
+				group.ID, err)
 			logrus.Errorf("failed to create service group ,err: %v", err)
 			return err
 		}
