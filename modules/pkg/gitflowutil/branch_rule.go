@@ -20,7 +20,7 @@ import (
 )
 
 // IsValidBranchWorkspace return if expectWorkspace is valid workspace & artifactWorkspace
-func IsValidBranchWorkspace(rules []apistructs.ValidBranch, expectWorkspace apistructs.DiceWorkspace) (validWorkspace, validArtifactWorkspace bool) {
+func IsValidBranchWorkspace(rules []*apistructs.ValidBranch, expectWorkspace apistructs.DiceWorkspace) (validWorkspace, validArtifactWorkspace bool) {
 	for _, rule := range rules {
 		for _, ws := range strutil.Split(rule.Workspace, ",", true) {
 			if ws == expectWorkspace.String() && !validWorkspace {

@@ -231,6 +231,7 @@ func (p *provider) initEndpoints(db *dbclient.DBClient) (*endpoints.Endpoints, e
 		endpoints.WithMigration(migration),
 		endpoints.WithReleaseSvc(p.DicehubReleaseSvc),
 		endpoints.WithScheduler(scheduler),
+		endpoints.WithBranch(br),
 	)
 
 	return ep, nil

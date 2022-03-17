@@ -218,7 +218,7 @@ func (r *Runtime) CreateByReleaseID(ctx context.Context, operator user.ID, relea
 	if releaseReq.ApplicationID != uint64(releaseResp.Data.ApplicationID) {
 		return nil, errors.Errorf("release does not correspond to the application")
 	}
-	branchWorkspaces, err := r.bdl.GetAllValidBranchWorkspace(releaseReq.ApplicationID, string(operator))
+	branchWorkspaces, err := r.branch.GetAllValidBranchWorkspaces(int64(releaseReq.ApplicationID), string(operator))
 	if err != nil {
 		return nil, apierrors.ErrCreateRuntime.InternalError(err)
 	}

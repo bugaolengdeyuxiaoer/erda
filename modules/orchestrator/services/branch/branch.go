@@ -18,6 +18,7 @@ import (
 	"github.com/erda-project/erda/apistructs"
 	"github.com/erda-project/erda/bundle"
 	"github.com/erda-project/erda/modules/orchestrator/dbclient"
+	"github.com/erda-project/erda/modules/pkg/diceworkspace"
 )
 
 // Branch of project
@@ -82,4 +83,39 @@ func (b *Branch) ToApiData(rule dbclient.BranchRule) *apistructs.BranchRule {
 		Workspace:         rule.Workspace,
 		ArtifactWorkspace: rule.ArtifactWorkspace,
 	}
+}
+
+func (b *Branch) GetAllValidBranchWorkspaces(appID int64, userID string) ([]*apistructs.ValidBranch, error) {
+	var result []*apistructs.ValidBranch
+
+	app, err := b.bdl.GetApp(uint64(appID))
+	if err != nil {
+		return nil, err
+	}
+	rules, err := b.QueryBranchRules(apistructs.ProjectScope, app.ProjectID)
+	if err != nil {
+		return nil, err
+	}
+	appRules, err := b.QueryBranchRules(apistructs.AppScope, uint64(appID))
+	if err != nil {
+		return nil, err
+	}
+	repoStats, err := b.bdl.GetGittarStats(int64(app.ID), userID)
+	if err != nil {
+		return nil, err
+	}
+	// project rule取部署信息 app rule取保护分支
+	for _, branch := range repoStats.Branches {
+		branchRule := diceworkspace.GetValidBranchByGitReference(branch, rules)
+		branchRule.IsProtect = diceworkspace.GetValidBranchByGitReference(branch, appRules).IsProtect
+		result = append(result, branchRule)
+	}
+
+	for _, tag := range repoStats.Tags {
+		branchRule := diceworkspace.GetValidBranchByGitReference(tag, rules)
+		branchRule.IsProtect = diceworkspace.GetValidBranchByGitReference(tag, appRules).IsProtect
+		result = append(result, branchRule)
+	}
+
+	return result, nil
 }

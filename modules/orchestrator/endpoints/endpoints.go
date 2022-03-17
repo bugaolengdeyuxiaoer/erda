@@ -33,6 +33,7 @@ import (
 	"github.com/erda-project/erda/modules/orchestrator/queue"
 	"github.com/erda-project/erda/modules/orchestrator/scheduler"
 	"github.com/erda-project/erda/modules/orchestrator/services/addon"
+	"github.com/erda-project/erda/modules/orchestrator/services/branch"
 	"github.com/erda-project/erda/modules/orchestrator/services/deployment"
 	"github.com/erda-project/erda/modules/orchestrator/services/deployment_order"
 	"github.com/erda-project/erda/modules/orchestrator/services/domain"
@@ -64,6 +65,7 @@ type Endpoints struct {
 	migration       *migration.Migration
 	releaseSvc      pb.ReleaseServiceServer
 	scheduler       *scheduler.Scheduler
+	branch          *branch.Branch
 }
 
 // Option Endpoints 配置选项
@@ -182,6 +184,13 @@ func WithMigration(migration *migration.Migration) Option {
 func WithReleaseSvc(svc pb.ReleaseServiceServer) Option {
 	return func(e *Endpoints) {
 		e.releaseSvc = svc
+	}
+}
+
+// WithBranch 设置 branch
+func WithBranch(branch *branch.Branch) Option {
+	return func(e *Endpoints) {
+		e.branch = branch
 	}
 }
 
